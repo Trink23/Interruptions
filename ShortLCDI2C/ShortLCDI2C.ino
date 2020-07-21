@@ -7,13 +7,12 @@
 #include <LiquidCrystal_I2C.h> // Library for LCD
 
 
-String multiple = "ms";
 const int enter = 2; //digital 2 as enter
 const int up = 3; //digital 3 as up 
 const int down = 4; //digital 4 as down 
 const int right = 5; //digital 5 as right
 const int left = 6; //digital 6 as left
-const int noInterrupt = 7; //digital 5 as stop interruptions
+const int esc = 7; //digital 7 as stop interruptions
 const int SecondGroupRelays = 12; //digital 5 as stop interruptions
 int interruption = 1; // Time of test execution
 int noCase = 1; // Number of the test case
@@ -31,8 +30,8 @@ void setup() {
   digitalWrite(up, HIGH);       // turn on pullup resistors
   pinMode(down, INPUT);           // set pin to input
   digitalWrite(down, HIGH);       // turn on pullup resistors
-  pinMode(noInterrupt, INPUT);           // set pin to input
-  digitalWrite(noInterrupt, HIGH);       // turn on pullup resistors
+  pinMode(esc, INPUT);           // set pin to input
+  digitalWrite(esc, HIGH);       // turn on pullup resistors
   pinMode(right, INPUT);           // set pin to input
   digitalWrite(right, HIGH);       // turn on pullup resistors
   pinMode(left, INPUT);           // set pin to input
@@ -60,38 +59,33 @@ void setup() {
 
 void loop() {
   // Print 'Scale' on the first line of the LCD:   
-  Serial.println("1");
   Serial.println(digitalRead(enter));
   delay(100);
 
   if(digitalRead(left) == 0){
-     Serial.println("left button pressed");
-        
-     ACSelected();
-    
-  }  
-   
-  
-  
+     Serial.println("left button pressed");        
+     ACMenu(); // Calls the function to move on the menu. 
+  }   
 }
 
-void ACSelected(){
+void ACMenu(){
   while(1){
     delay(100);
     if(digitalRead(down) == 0){
-      if(noCase > 1){
+      if(noCase >= 1){
         noCase--;
-        ACInputVoltageTestCases(noCase); 
+        ACInputVoltageTestCases(noCase); // Updates the lcd and change the TimeInterruption
       }
     }
     else if(digitalRead(up) == 0){
-      if(noCase < 3){      
+      if(noCase <= 6){      
         noCase++;   
-        ACInputVoltageTestCases(noCase);    
+        ACInputVoltageTestCases(noCase); // Updates the lcd and change the TimeInterruption  
       }     
     }
     else if(digitalRead(enter) == 0){    
-      executeInterruption(interruption);        
+      executeInterruption(interruption); // Execute the Interruption 
+      ACInputVoltageTestCases(noCase); // Updates the lcd and change the TimeInterruption       
     }
        
     
@@ -100,7 +94,21 @@ void ACSelected(){
 
 void executeInterruption(int interruptionTime){
 
-
+  lcd.clear();
+  lcd.setCursor(0, 0); // Set the cursor on the first column and first row.
+  lcd.print("TEST IN PROGRESS");
+  lcd.setCursor(0, 1); // Set the cursor on the first column and first row.
+  lcd.print("     5");
+  delay(1000);
+  lcd.print("     4");
+  delay(1000);
+  lcd.print("     3");
+  delay(1000);
+  lcd.print("     2");
+  delay(1000);
+  lcd.print("     1");
+  delay(1000);
+  
   digitalWrite(LED_BUILTIN, LOW);   // turn the LED on (HIGH is the voltage level)
   delayMicroseconds(5);
   digitalWrite(SecondGroupRelays, LOW); // later
@@ -111,68 +119,6 @@ void executeInterruption(int interruptionTime){
                          
   
 }
-void downTimeInterruption(){
-  if(interruption >= 1){
-    interruption--;   
-      
-    lcd.clear();
-    lcd.setCursor(0, 0); //Set the cursor on the third column and the second row (counting starts at 0!).
-    lcd.print("Multiple = ms");
-    lcd.setCursor(0, 1); //Set the cursor on the third column and the second row (counting starts at 0!).
-    lcd.print("Interrupt = " + String(interruption));
-  }
-}
-
-void upTimeInterruption(){
-  interruption++;   
-  lcd.setCursor(0, 1); //Set the cursor on the third column and the second row (counting starts at 0!).  
-  lcd.print("Interrupt = " + String(interruption));
-}
-
-void instart(int interruption,String multiples){
-  if(multiples = "ms"){ 
-    while(1){
-      digitalWrite(LED_BUILTIN, LOW);   // turn the LED on (HIGH is the voltage level)
-      Serial.println("ON");
-      delay(interruption);                 
-      digitalWrite(LED_BUILTIN, HIGH);    // turn the LED off by making the voltage LOW
-      Serial.println("OFF");
-      delay(interruption);  
-      if(digitalRead(noInterrupt) == 0){
-        break;      
-      }
-    }
-    if(multiples = "us"){ 
-    while(1){
-      digitalWrite(LED_BUILTIN, LOW);   // turn the LED on (HIGH is the voltage level)
-      delayMicroseconds(interruption);                       
-      digitalWrite(LED_BUILTIN, HIGH);    // turn the LED off by making the voltage LOW
-      delayMicroseconds(interruption);   
-      if(digitalRead(noInterrupt) == 1){
-        break;      
-      }     
-    }
-
-  }
-  
-  }
-}
-
-
-void selectTimeMultiple(int value){
-  lcd.setCursor(0, 0); // Set the cursor on the first column and first row.
-  switch(value){
-    case 1:
-      lcd.print("Multiple = ms"); // Print the string "Scale = ms"
-      multiple = "ms";
-    case 2:
-      lcd.print("Multiple = us"); // Print the string "Scale = us"
-      multiple = "us";
-    default:
-      lcd.print("Multiple = ms"); // Print the string "Scale = ms"
-  }
-}
-
 
 void ACInputVoltageTestCases(int caseValue){
  switch(caseValue){
@@ -197,8 +143,28 @@ void ACInputVoltageTestCases(int caseValue){
       lcd.setCursor(0, 1); // Set the cursor on the first column and first row.
       lcd.print("V2: 40%  200ms"); // Print string 
       interruption = 200;
+    case 4:
+      lcd.clear(); // Clear the screen
+      lcd.setCursor(0, 0); // Set the cursor on the first column and first row.
+      lcd.print("SELECT TEST AC");
+      lcd.setCursor(0, 1); // Set the cursor on the first column and first row.
+      lcd.print("V2: 70%  500ms"); // Print string 
+      interruption = 500;
+    case 5:
+      lcd.clear(); // Clear the screen
+      lcd.setCursor(0, 0); // Set the cursor on the first column and first row.
+      lcd.print("SELECT TEST AC");
+      lcd.setCursor(0, 1); // Set the cursor on the first column and first row.
+      lcd.print("V2: 80%  5000ms"); // Print string 
+      interruption = 5000;
+    case 6:
+      lcd.clear(); // Clear the screen
+      lcd.setCursor(0, 0); // Set the cursor on the first column and first row.
+      lcd.print("SELECT TEST AC");
+      lcd.setCursor(0, 1); // Set the cursor on the first column and first row.
+      lcd.print("V2: 0%  5000ms"); // Print string 
+      interruption = 5000;
     default:
-      lcd.print("Hola Mundo");
-     
+      lcd.print("Hola Mundo");     
   }
 }
