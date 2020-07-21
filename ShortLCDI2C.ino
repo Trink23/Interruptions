@@ -10,7 +10,7 @@ const int inputstart = 2; //digital 2 as start
 const int increase = 3; //digital 3 as increase time
 const int decrease = 4; //digital 4 as decrease time
 const int noInterrupt = 5; //digital 5 as stop interruptions
-int interruption = 1;
+int interruption = 1; 
 
 // Wiring: SDA pin is connected to A4 and SCL pin to A5.
 // Connect to LCD via I2C, default address 0x27 (A0-A2 not jumpered)
@@ -32,10 +32,10 @@ void setup() {
   // initialize digital pin LED_BUILTIN as an output.
   pinMode(LED_BUILTIN, OUTPUT);
   lcd.setCursor(0, 1); //Set the cursor on the third column and the second row (counting starts at 0!).  
-  lcd.print("Interrup = " + String(interruption));
+  lcd.print("Interrupt = " + String(interruption));
   Serial.begin(9600);
   while (!Serial); // Leonardo: wait for serial monitor 
-  Serial.println("Inicializado");
+  Serial.println("Initialize");
 
 }
 
@@ -60,15 +60,19 @@ void loop() {
 void decreaseTimeInterruption(){
   if(interruption >= 1){
     interruption--;   
-    lcd.setCursor(0, 1); //Set the cursor on the third column and the second row (counting starts at 0!).  
-    lcd.print("Interrup = " + String(interruption));
+      
+    lcd.clear();
+    lcd.setCursor(0, 0); //Set the cursor on the third column and the second row (counting starts at 0!).
+    lcd.print("Multiple = ms");
+    lcd.setCursor(0, 1); //Set the cursor on the third column and the second row (counting starts at 0!).
+    lcd.print("Interrupt = " + String(interruption));
   }
 }
 
 void increaseTimeInterruption(){
   interruption++;   
   lcd.setCursor(0, 1); //Set the cursor on the third column and the second row (counting starts at 0!).  
-  lcd.print("Interrup = " + String(interruption));
+  lcd.print("Interrupt = " + String(interruption));
 }
 
 void instart(int interruption,String multiples){
