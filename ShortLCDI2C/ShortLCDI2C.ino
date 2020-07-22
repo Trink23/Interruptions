@@ -63,6 +63,10 @@ void loop() {
   if(digitalRead(left) == 0){
      Serial.println("left button pressed");        
      ACMenu(); // Calls the function to move on the menu. 
+  }
+  if(digitalRead(right) == 0){
+   Serial.println("right button pressed");        
+   DCMenu(); // Calls the function to move on the menu. 
   }   
 }
 
@@ -89,8 +93,51 @@ void ACMenu(){
       Serial.println("noCase " + String(noCase)); 
       ACInputVoltageTestCases(noCase); // Updates the lcd and change the TimeInterruption       
     }
+    else if(digitalRead(esc) == 0){
+      lcd.clear();
+      lcd.setCursor(0, 0); //Set the cursor on the third column and the second row (counting starts at 0!).  
+      lcd.print("SELECT VOLTAGE");
+      lcd.setCursor(0, 1); //Set the cursor on the third column and the second row (counting starts at 0!).  
+      lcd.print("AC <        >DC");
+      break;
+    }
+  }
+  Serial.println("Exit of while");
+}
+
+void DCMenu(){
+  DCInputVoltageTestCases(noCase); // Updates the lcd and change the TimeInterruption 
+  while(1){
+    delay(300);
+    if(digitalRead(down) == 0){
+      if(noCase > 1){
+        noCase--;
+        Serial.println("noCase " + String(noCase)); 
+        DCInputVoltageTestCases(noCase); // Updates the lcd and change the TimeInterruption
+      }
+    }
+    else if(digitalRead(up) == 0){
+      if(noCase < 17){      
+        noCase++; 
+        Serial.println("noCase " + String(noCase));   
+        DCInputVoltageTestCases(noCase); // Updates the lcd and change the TimeInterruption  
+      }     
+    }
+    else if(digitalRead(enter) == 0){    
+      executeInterruption(interruption); // Execute the Interruption 
+      Serial.println("noCase " + String(noCase)); 
+      DCInputVoltageTestCases(noCase); // Updates the lcd and change the TimeInterruption       
+    }
+    else if(digitalRead(esc) == 0){
+      lcd.clear();
+      lcd.setCursor(0, 0); //Set the cursor on the third column and the second row (counting starts at 0!).  
+      lcd.print("SELECT VOLTAGE");
+      lcd.setCursor(0, 1); //Set the cursor on the third column and the second row (counting starts at 0!).  
+      lcd.print("AC <        >DC");
+      break;
+    }
        
-    
+     Serial.println("Exit of while"); 
   }
 }
 
@@ -140,6 +187,9 @@ void coundown(){
   lcd.setCursor(0, 1); // Set the cursor on the first column and first row.
   lcd.print("     1");
   delay(1000);
+  lcd.clear();
+  lcd.setCursor(0, 1); // Set the cursor on the first column and first row.
+  lcd.print("Executing Test....");
   
 }
 void ACInputVoltageTestCases(int caseValue){
@@ -195,3 +245,146 @@ void ACInputVoltageTestCases(int caseValue){
  
   }
 }
+
+  void DCInputVoltageTestCases(int caseValue){
+   switch(caseValue){
+      case 1:
+        lcd.clear(); // Clear the screen
+        lcd.setCursor(0, 0); // Set the cursor on the first column and first row.
+        lcd.print("SELECT TEST DC");
+        lcd.setCursor(0, 1); // Set the cursor on the first column and first row.
+        lcd.print("V2: 0%  1ms"); // Print string 
+        interruption = 1;  
+        break;
+      case 2:
+        lcd.clear(); // Clear the screen
+        lcd.setCursor(0, 0); // Set the cursor on the first column and first row.
+        lcd.print("SELECT TEST DC");
+        lcd.setCursor(0, 1); // Set the cursor on the first column and first row.
+        lcd.print("V2: 0%  3ms"); // Print string 
+        interruption = 3;  
+        break;
+      case 3:
+        lcd.clear(); // Clear the screen
+        lcd.setCursor(0, 0); // Set the cursor on the first column and first row.
+        lcd.print("SELECT TEST DC");
+        lcd.setCursor(0, 1); // Set the cursor on the first column and first row.
+        lcd.print("V2: 0%  10ms"); // Print string 
+        interruption = 10;
+        break;
+      case 4:
+        lcd.clear(); // Clear the screen
+        lcd.setCursor(0, 0); // Set the cursor on the first column and first row.
+        lcd.print("SELECT TEST DC");
+        lcd.setCursor(0, 1); // Set the cursor on the first column and first row.
+        lcd.print("V2: 0%  30ms"); // Print string 
+        interruption = 30;
+        break;
+      case 5:
+        lcd.clear(); // Clear the screen
+        lcd.setCursor(0, 0); // Set the cursor on the first column and first row.
+        lcd.print("SELECT TEST DC");
+        lcd.setCursor(0, 1); // Set the cursor on the first column and first row.
+        lcd.print("V2: 0%  100ms"); // Print string 
+        interruption = 100;
+        break;
+      case 6:
+        lcd.clear(); // Clear the screen
+        lcd.setCursor(0, 0); // Set the cursor on the first column and first row.
+        lcd.print("SELECT TEST DC");
+        lcd.setCursor(0, 1); // Set the cursor on the first column and first row.
+        lcd.print("V2: 0%  300ms"); // Print string 
+        interruption = 300;
+        break;
+      case 7:
+        lcd.clear(); // Clear the screen
+        lcd.setCursor(0, 0); // Set the cursor on the first column and first row.
+        lcd.print("SELECT TEST DC");
+        lcd.setCursor(0, 1); // Set the cursor on the first column and first row.
+        lcd.print("V2: 0%  1000ms"); // Print string 
+        interruption = 1000;
+        break;
+      case 8:
+        lcd.clear(); // Clear the screen
+        lcd.setCursor(0, 0); // Set the cursor on the first column and first row.
+        lcd.print("SELECT TEST DC");
+        lcd.setCursor(0, 1); // Set the cursor on the first column and first row.
+        lcd.print("V2: 40%  10ms"); // Print string 
+        interruption = 10;
+        break;
+      case 9:
+        lcd.clear(); // Clear the screen
+        lcd.setCursor(0, 0); // Set the cursor on the first column and first row.
+        lcd.print("SELECT TEST DC");
+        lcd.setCursor(0, 1); // Set the cursor on the first column and first row.
+        lcd.print("V2: 40%  30ms"); // Print string 
+        interruption = 30;
+        break;
+      case 10:
+        lcd.clear(); // Clear the screen
+        lcd.setCursor(0, 0); // Set the cursor on the first column and first row.
+        lcd.print("SELECT TEST DC");
+        lcd.setCursor(0, 1); // Set the cursor on the first column and first row.
+        lcd.print("V2: 40%  100ms"); // Print string 
+        interruption = 100;
+        break;
+      case 11:
+        lcd.clear(); // Clear the screen
+        lcd.setCursor(0, 0); // Set the cursor on the first column and first row.
+        lcd.print("SELECT TEST DC");
+        lcd.setCursor(0, 1); // Set the cursor on the first column and first row.
+        lcd.print("V2: 40%  300ms"); // Print string 
+        interruption = 300;
+        break;
+      case 12:
+        lcd.clear(); // Clear the screen
+        lcd.setCursor(0, 0); // Set the cursor on the first column and first row.
+        lcd.print("SELECT TEST DC");
+        lcd.setCursor(0, 1); // Set the cursor on the first column and first row.
+        lcd.print("V2: 40%  1000ms"); // Print string 
+        interruption = 1000;
+        break;
+      case 13:
+        lcd.clear(); // Clear the screen
+        lcd.setCursor(0, 0); // Set the cursor on the first column and first row.
+        lcd.print("SELECT TEST DC");
+        lcd.setCursor(0, 1); // Set the cursor on the first column and first row.
+        lcd.print("V2: 70%  10ms"); // Print string 
+        interruption = 10;
+        break;
+      case 14:
+        lcd.clear(); // Clear the screen
+        lcd.setCursor(0, 0); // Set the cursor on the first column and first row.
+        lcd.print("SELECT TEST DC");
+        lcd.setCursor(0, 1); // Set the cursor on the first column and first row.
+        lcd.print("V2: 70%  30ms"); // Print string 
+        interruption = 30;
+        break;
+      case 15:
+        lcd.clear(); // Clear the screen
+        lcd.setCursor(0, 0); // Set the cursor on the first column and first row.
+        lcd.print("SELECT TEST DC");
+        lcd.setCursor(0, 1); // Set the cursor on the first column and first row.
+        lcd.print("V2: 70%  100ms"); // Print string 
+        interruption = 100;
+        break;
+      case 16:
+        lcd.clear(); // Clear the screen
+        lcd.setCursor(0, 0); // Set the cursor on the first column and first row.
+        lcd.print("SELECT TEST DC");
+        lcd.setCursor(0, 1); // Set the cursor on the first column and first row.
+        lcd.print("V2: 70%  300ms"); // Print string 
+        interruption = 300;
+        break;
+      case 17:
+        lcd.clear(); // Clear the screen
+        lcd.setCursor(0, 0); // Set the cursor on the first column and first row.
+        lcd.print("SELECT TEST DC");
+        lcd.setCursor(0, 1); // Set the cursor on the first column and first row.
+        lcd.print("V2: 70%  1000ms"); // Print string 
+        interruption = 1000;
+        break;
+  
+   
+    }
+  }
